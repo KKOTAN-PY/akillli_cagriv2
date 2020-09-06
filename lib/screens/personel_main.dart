@@ -1,5 +1,9 @@
 
 
+import 'dart:convert';
+
+import 'package:akilli_cagri/models/all_user_model.dart';
+import 'package:akilli_cagri/models/api/all_user_api.dart';
 import 'package:akilli_cagri/models/personel_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -22,6 +26,7 @@ class PersonelMain extends StatefulWidget{
 class _PersonelMain extends State{
   Personel personel;
   _PersonelMain(this.personel);
+  List<AllPersonel> allpersonel = List<AllPersonel>();
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +63,7 @@ class _PersonelMain extends State{
                           Text("title :"+" "+personel.title),
                           Text("İsim :"+" "+personel.name),
                           Text("Telefon :"+" "+personel.telNo),
+
                         ],
                       ),
                     ],
@@ -65,7 +71,8 @@ class _PersonelMain extends State{
                 ],
               ),
             ),
-            Icon(Icons.people),
+
+            waitingData(),
             Icon(Icons.directions_bike),
           ],
 
@@ -74,5 +81,18 @@ class _PersonelMain extends State{
     );
 
 
+  }
+
+  waitingData() {
+
+    AllUserApi.Alluser(personel.token).then((value){
+      //var dataJson = json.decode(value.body);
+      //var users =AllPersonel.fromJson(dataJson);
+      Map<String, dynamic> user = jsonDecode(value.body);
+      print('We sent the verification link to ${user['email']}.');
+
+
+    });
+     return  Text("aa");
   }
 }

@@ -1,6 +1,4 @@
-
-
-class Personel{
+class AllPersonel{
   String id ;
   String title;
   String name ;
@@ -9,11 +7,11 @@ class Personel{
   String department;
   String manager;
   String sameManager;
-  String token;
-  Personel(this.id,this.title,this.name,this.email,this.telNo,this.department,this.manager,this.sameManager,this.token);
+  String thumbnailPhoto;
+  AllPersonel(this.id,this.title,this.name,this.email,this.telNo,this.department,this.manager,this.sameManager,this.thumbnailPhoto);
 
 
-  Personel.fromJson(Map json){
+  AllPersonel.fromJson(Map json){
 
     id = json["id"].toString();
     title = json["title"].toString();
@@ -23,7 +21,6 @@ class Personel{
     department = json["department"].toString();
     manager = json["manager"].toString();
     sameManager = json["sameManager"].toString();
-    token=json["authorization"]["access_token"];
+    thumbnailPhoto = json["thumbnailPhoto"].toString();
   }
-
 }
