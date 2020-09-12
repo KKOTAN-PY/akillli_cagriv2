@@ -1,8 +1,7 @@
 import 'package:akilli_cagri/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'models/login/modellogin.dart';
-import 'models/login/sifreleme.dart';
+
 
 void main() {
   runApp(MyApp());

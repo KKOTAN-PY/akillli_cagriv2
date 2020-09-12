@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   encryptblowfish:
   http:
+  sqflite:
+  path:
 
 
   # The following adds the Cupertino Icons font to your application.

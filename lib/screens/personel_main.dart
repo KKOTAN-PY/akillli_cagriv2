@@ -1,98 +1,123 @@
-
-
 import 'dart:convert';
 
+
+import 'package:akilli_cagri/data/dbHelper.dart';
+import 'package:akilli_cagri/data/dcryptText.dart';
 import 'package:akilli_cagri/models/all_user_model.dart';
 import 'package:akilli_cagri/models/api/all_user_api.dart';
 import 'package:akilli_cagri/models/personel_model.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class PersonelMain extends StatefulWidget{
+class PersonelMain extends StatefulWidget {
   Personel personel;
   PersonelMain(Personel this.personel);
-
-
-
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _PersonelMain(personel);
   }
-
 }
 
-class _PersonelMain extends State{
+class _PersonelMain extends State {
   Personel personel;
   _PersonelMain(this.personel);
   List<AllPersonel> allpersonel = List<AllPersonel>();
+  List<Widget> personelWidget =List<Widget>();
+  List<AllPersonel> listAll =List<AllPersonel>();
+  DbHelper db = DbHelper();
+  Decrypt decrypt = Decrypt();
+
+  // ignore: must_call_super
+  void initState() {
+
+    //waitingData();
+    //getpp();
+
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return DefaultTabController(
       length: 3,
-      child:Scaffold(
+      child: Scaffold(
         appBar: AppBar(
           title: Text("Personel Main"),
-          bottom:TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.perm_identity)),
-              Tab(icon: Icon(Icons.people)),
-              Tab(icon: Icon(Icons.directions_bike)),
-            ],
-          ),
         ),
-
-        body: TabBarView(
+        body:Column(
           children: [
-            Container(
-              margin: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.amberAccent,
-                    radius: 50.0,
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Text("Müdürlük :"+" "+personel.department),
-                          Text("title :"+" "+personel.title),
-                          Text("İsim :"+" "+personel.name),
-                          Text("Telefon :"+" "+personel.telNo),
+            TextFormField(
+              decoration: InputDecoration(),
+              onChanged: (text){
+                if (text.length > 3){
+                  var result = db.getTodo(text).then((value) {
+                    for (var i in value) {
+                      var resut = AllPersonel.fromObje(i);
+                      this.listAll.add(resut);
 
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    }
+                  });
+                }else{
+                  listAll.clear();
+                }
+
+              },
+            ),
+            RaisedButton(
+              child: Text("bas"),
+              onPressed: (){
+                var result = db.getTodo("Siddik");
+              },
+
             ),
 
-            waitingData(),
-            Icon(Icons.directions_bike),
           ],
-
         ),
-      ) ,
+      ),
     );
-
-
   }
 
   waitingData() {
+    AllUserApi.Alluser(personel.token).then((value) {
 
-    AllUserApi.Alluser(personel.token).then((value){
-      //var dataJson = json.decode(value.body);
-      //var users =AllPersonel.fromJson(dataJson);
-      Map<String, dynamic> user = jsonDecode(value.body);
-      print('We sent the verification link to ${user['email']}.');
+      List user = jsonDecode(value.body) as List;
+      Iterable list = user;
 
+      setState(() {
+        this.allpersonel =list.map((pers) => AllPersonel.fromJson(pers)).toList();
+          print(allpersonel);
+        getPersonelWidget();
+      });
 
     });
-     return  Text("aa");
+  }
+
+  Widget addPersonelWidget(BuildContext context) {
+    print("bastın");
+    for (var i in this.allpersonel){
+      return Text(i.name+" "+i.thumbnailPhoto);
+    }
+      }
+
+  void getPersonelWidget() async {
+    for (var i in this.allpersonel){
+      print(i.name);
+      var result =await db.inSert(i);
+
+    }
+
+  }
+
+  void getpp(){
+    var aaa =db.getPersonel();
+    aaa.then((value) {
+      for(var i in value){
+        print(i.name);
+      }
+    });
   }
 }
+

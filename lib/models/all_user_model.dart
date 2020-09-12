@@ -1,4 +1,9 @@
+import 'package:akilli_cagri/data/dcryptText.dart';
+
 class AllPersonel{
+  Decrypt decrypt = Decrypt();
+
+  int idRow;
   String id ;
   String title;
   String name ;
@@ -22,5 +27,38 @@ class AllPersonel{
     manager = json["manager"].toString();
     sameManager = json["sameManager"].toString();
     thumbnailPhoto = json["thumbnailPhoto"].toString();
+  }
+
+    Map<String,dynamic > allPersonelMap() {
+
+    var map =Map<String,dynamic>();
+    map["idRow"] =this.idRow;
+    map["id"] =this.id.toString();
+    map["title"] =this.title.toString();
+    map["name"] =this.name.toString();
+    map["email"] =this.email.toString();
+    map["telNo"] =this.telNo.toString();
+    map["department"] =this.department.toString();
+    map["manager"] =this.manager.toString();
+    map["sameManager"] =this.sameManager.toString();
+    map["thumbnailPhoto"] =this.thumbnailPhoto.toString();
+
+    if (id != null) {
+      map["idRow"] = idRow;
+    }
+    return map;
+  }
+
+  AllPersonel.fromObje(dynamic o){
+    this.idRow=o["idRow"];
+    this.id=o["id"];
+    this.title=o["title"];
+    this.name=o["name"];
+    this.email=o["email"];
+    this.telNo=o["telNo"];
+    this.department=o["department"];
+    this.manager=o["manager"];
+    this.sameManager=o["sameManager"];
+    this.thumbnailPhoto=o["thumbnailPhoto"];
   }
 }

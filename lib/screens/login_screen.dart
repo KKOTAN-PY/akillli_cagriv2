@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 
+import 'package:akilli_cagri/data/dbHelper.dart';
 import 'package:akilli_cagri/models/api/login_api.dart';
 import 'package:akilli_cagri/models/login/modellogin.dart';
 import 'package:akilli_cagri/models/login/sifreleme.dart';
@@ -23,11 +24,17 @@ class _LoginScreen extends State{
   var loginmodel = LoginModel();
   Encrypt encrypt =Encrypt();
   LoginApi loginApi = new LoginApi();
-
+  DbHelper db = DbHelper();
   String encrypt_id = "";
   String encrypt_passwd = "";
   TextEditingController id = TextEditingController();
   TextEditingController paswd = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    db.initalizeDb();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -81,14 +88,29 @@ class _LoginScreen extends State{
 
    loginOnline() {
     var son= encrypt.blowFishEncrypt(id.text);
-    son.then((value) => this.encrypt_id = value);
-    var son1= encrypt.blowFishEncrypt(paswd.text);
-    son1.then((value) => this.encrypt_passwd = value);
+    son.then((value) {
+
+      this.encrypt_id = value;
+      var son1= encrypt.blowFishEncrypt(paswd.text);
+      son1.then((value) {
+
+        this.encrypt_passwd = value;
+        loginOl();
+      });
+    });
+
     loginmodel.id= id.text;
     loginmodel.password= paswd.text;
 
+    
+
+  }
+
+  void loginOl() {
+
     var log =LoginApi.login(encrypt_id.trim(),encrypt_passwd.trim());
     log.then((value){
+      print("burası");
       var onay  =json.decode(value.body.toString());
       print(onay);
       if (onay == true){
@@ -98,5 +120,8 @@ class _LoginScreen extends State{
 
       }
     });
+
   }
+
+
 }
