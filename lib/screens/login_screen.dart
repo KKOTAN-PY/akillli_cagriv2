@@ -11,6 +11,8 @@ import 'package:akilli_cagri/models/personel_model.dart';
 import 'package:akilli_cagri/screens/verification_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'loadingCirle.dart';
+
 class LoginScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -29,6 +31,7 @@ class _LoginScreen extends State{
   String encrypt_passwd = "";
   TextEditingController id = TextEditingController();
   TextEditingController paswd = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -44,11 +47,15 @@ class _LoginScreen extends State{
       ),
       body: Container(
         padding: EdgeInsets.only(left: 20.0,top: 75.0),
-        child: Column(
+        child: isLoading
+            ? Center(
+          child: CircularProgressIndicator(),
+        ):Column(
           children: [
             sicil(),
             passwordd(),
-            loginButton()
+            loginButton(),
+
           ],
         ),
       ),
@@ -79,7 +86,14 @@ class _LoginScreen extends State{
     return RaisedButton(
       child: Text("Giriş"),
       onPressed:(){
-        loginOnline();
+        setState(() {
+          this.isLoading = true;
+          loginOnline();
+        });
+
+
+
+
 
 
       } ,
@@ -117,11 +131,16 @@ class _LoginScreen extends State{
 
         var result =Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VerificationScreen(id.text)));
         print(id.text);
+        setState(() {
+          this.isLoading = false;
+        });
 
       }
     });
 
   }
+
+
 
 
 }

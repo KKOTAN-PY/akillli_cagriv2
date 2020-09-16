@@ -31,6 +31,15 @@ class Decrypt{
     decrypt = await Encryptblowfish.getStringAfterDecrypt(key, decryptStr);
     this._decrypt = decrypt;
 
+
+  }
+ Future numaraCozucu(String deger)async{
+
+    this.decryptStr = deger;
+    await initPlatformState();
+    print(_decrypt);
+    return await _decrypt;
+
   }
 
 }

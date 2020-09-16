@@ -1,11 +1,14 @@
 
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:akilli_cagri/models/api/verification_api.dart';
 import 'package:akilli_cagri/models/personel_model.dart';
 import 'package:akilli_cagri/screens/personel_main.dart';
 import 'package:flutter/material.dart';
+import 'package:phone_state_i/phone_state_i.dart';
+
 
 class VerificationScreen extends StatefulWidget{
   String id ;
@@ -26,8 +29,23 @@ class _verificationScreen extends State {
   TextEditingController verificationCode = TextEditingController();
   String id ;
   _verificationScreen(this.id);
+  StreamSubscription streamSubscription;
+  bool isLoading = false;
+@override
+void dispose() {
+  super.dispose();
+  streamSubscription.cancel();
+
+}
 
 
+  void initState() {
+    super.initState();
+    streamSubscription = phoneStateCallEvent.listen((PhoneStateCallEvent event) {
+      print('Call is Incoming or Connected' + event.stateC);
+      //event.stateC has values "true" or "false"
+    });
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -38,7 +56,10 @@ class _verificationScreen extends State {
 
       body: Container(
         padding: EdgeInsets.only(left: 20.0,top: 100.0),
-        child: Column(
+        child:isLoading
+            ? Center(
+          child: CircularProgressIndicator(),
+        ): Column(
           children: [
             verificationInput(),
 
@@ -65,6 +86,9 @@ class _verificationScreen extends State {
     return RaisedButton(
       child: Text("Onayla"),
       onPressed:(){
+        setState(() {
+          isLoading =true;
+        });
 
          var onay = VerificationApi.Verification(id, verificationCode.text);
          onay.then((value) {
@@ -80,11 +104,16 @@ class _verificationScreen extends State {
 
              //Iterable list =json.decode(value.body);
              //this.personel = list.map((personell) => Personel.fromJson(personell)).toList() ;
+
+
              var result =Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PersonelMain(pers)));
+             setState(() {
+               isLoading =false;
+             });
 
            }else{
              print("Doğrulama Kodu Yanlış");
-             Navigator.pop(context);
+             //Navigator.pop(context);
            }
 
          });
@@ -92,5 +121,7 @@ class _verificationScreen extends State {
 
       } ,
     );
+
+
   }
 }

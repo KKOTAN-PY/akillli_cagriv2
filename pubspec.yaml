@@ -27,6 +27,7 @@ dependencies:
   http:
   sqflite:
   path:
+  phone_state_i:
 
 
   # The following adds the Cupertino Icons font to your application.
